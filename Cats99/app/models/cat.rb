@@ -3,5 +3,6 @@ class Cat < ActiveRecord::Base
   validates :sex, inclusion: { in: %w(M F),
     message: "%{sex} is not a valid sex"}
 
-    
+  has_many :cat_rental_requests
+
 end
