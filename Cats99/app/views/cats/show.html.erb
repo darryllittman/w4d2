@@ -5,11 +5,20 @@
     <th> Color </th>
     <th> Birthday </th>
     <th> Description </th>
+    <th> Rental Requests </th>
+
   </tr>
   <tr>
     <td><%= @cat.sex %></td>
     <td><%= @cat.color %></td>
     <td><%= @cat.birth_date %></td>
     <td><%= @cat.description %></td>
+    <td><% @requests.each do |request| %>
+          <%= request.start_date  %>
+          <%= request.end_date %>
+          <%= button_to "Approve", cat_url(@cat), method: :patch, request: :approve!%>
+          <%= button_to "Deny", cat_url(@cat), method: :patch, request: :deny!%>
+        <% end %>
+    </td>
   </tr>
 </table>

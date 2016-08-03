@@ -12,8 +12,8 @@ class CatsController < ApplicationController
     if @cat.save
       redirect_to cat_url(@cat)
     else
-      # render flash: {error: @cat.errors.full_messages}
-      # @errors = []
+    flash[:errors] = ["Error"]
+    render :new      # @errors = []
       # @errors << @cat.errors.full_messages
     end
   end
@@ -24,6 +24,7 @@ class CatsController < ApplicationController
 
   def show
     @cat = Cat.find_by_id(params[:id])
+    @requests = @cat.cat_rental_requests.order(:start_date)
   end
 
   def update
@@ -31,14 +32,12 @@ class CatsController < ApplicationController
     if @cat.update(cat_params)
       redirect_to cat_url(@cat)
     else
-      # render flash: {error: @cat.errors.full_messages}
-      # @errors = []
-      # @errors << @cat.errors.full_messages
+      render flash: {error: @cat.errors.full_messages}
+      @errors = []
+      @errors << @cat.errors.full_messages
     end
   end
 
-  def persisted?
-  end
 
 
   private

@@ -10,12 +10,36 @@ class CatRentalRequest < ActiveRecord::Base
     data = cat.cat_rental_requests
     s = self.start_date
     e = self.end_date
-    # where_string = "start_date <= ? OR end_date >= ? OR (start_date <= ? AND end_date >= ?)"
-    requests = data.select {|datum| datum.start_date.between?(s, e) || datum.end_date.between?(s, e) || s.between?(datum.start_date, datum.end_date)}
+    requests = data.select do |datum|
+      next if datum.id == self.id
+      datum.start_date.between?(s, e) || datum.end_date.between?(s, e) || s.between?(datum.start_date, datum.end_date)
+    end
   end
 
   def overlapping_approved_requests
+    overlapping_requests.select {|request| request.status == "APPROVED"}
+  end
 
+  def overlapping_pending_requests
+    overlapping_requests.select {|request| request.status == "PENDING"}
+  end
+
+  def approve!
+    requests = overlapping_approved_requests + overlapping_pending_requests
+
+    ActiveRecord::Base.transaction do
+      self.update(status: "APPROVED")
+      requests.each do |request|
+        request.deny!
+      end
+    end
+  end
+
+  def deny!
+    self.update(status: "DENIED")
+  end
+
+  def pending?
   end
 
 end

@@ -1,3 +1,9 @@
+<% if flash[:errors] %>
+  <ul>
+  <%= flash[:errors] %> 
+  </ul>
+<% end %>
+
 <% action_url = (action == :new) ? cats_url : cat_url(cat) %>
 <form action="<%= action_url %>" method="post">
   <% if action == :edit %>
@@ -28,7 +34,6 @@
   <label>
     Birthday:
     <input type="date" name="cat[birth_date]" value="<%= @cat.birth_date %>">
-    </select>
   </label>
   <label>
     Description:
